@@ -14,6 +14,6 @@
   },
   "scripts": {
     "start": "ts-node-dev --no-notify --project ../tsconfig.json",
-    "watch": "if [[ ${EXAMPLE} ]]; then yarn start $EXAMPLE; else echo; fi"
+    "watch": "if [[ ${EXAMPLE} ]]; then npm run start $EXAMPLE; else echo; fi"
   }
 }

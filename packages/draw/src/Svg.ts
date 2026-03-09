@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { Shape } from './Shape';
 import { parse, Node } from 'svg-parser';
 import { Path } from './Path';

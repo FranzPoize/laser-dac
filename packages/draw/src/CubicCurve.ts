@@ -1,6 +1,6 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
-import Bezier = require('bezier-js');
+const {Bezier} = require('bezier-js');
 
 interface BezierCoordinates {
   x: number;
@@ -52,6 +52,6 @@ export class CubicCurve extends Shape {
     // Remove the first point if there is one.
     if (curvePoints.length > 1) curvePoints.shift();
 
-    return curvePoints.map((point) => new Point(point.x, point.y, this.color));
+    return curvePoints.map((point: any) => new Point(point.x, point.y, this.color));
   }
 }

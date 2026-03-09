@@ -17,6 +17,9 @@ export abstract class Device {
   abstract start(): Promise<boolean>;
   abstract stop(): void;
   abstract stream(scene: Scene, pointsRate: number, fps: number): void;
+  abstract getMaxFrameSize(): number;
+  abstract getMaxSampleRate(): number;
+  abstract getMinSampleRate(): number;
 }
 
 export class DAC {
@@ -35,6 +38,18 @@ export class DAC {
 
   removeAll() {
     this.devices = [];
+  }
+
+  getMaxFrameSize() {
+    return this.devices.map((d) => d.getMaxFrameSize())
+  }
+
+  getMaxSampleRate() {
+    return this.devices.map((d) => d.getMaxSampleRate())
+  }
+
+  getMinSampleRate() {
+    return this.devices.map((d) => d.getMinSampleRate())
   }
 
   async start() {

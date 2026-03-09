@@ -15,7 +15,7 @@
   },
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "src"
   ],
   "publishConfig": {
     "access": "public"
@@ -30,16 +30,16 @@
     "@laser-dac/ilda-reader": "^0.3.3",
     "@types/bezier-js": "^0.0.8",
     "@types/svg-parser": "^1.0.0",
-    "bezier-js": "^2.2.15",
-    "change-perspective": "^1.0.0",
-    "svg-arc-to-cubic-bezier": "^3.1.2",
-    "svg-parser": "^1.0.5",
-    "svg-pathdata": "^5.0.2"
+    "bezier-js": "^6.1.4",
+    "change-perspective": "^1.0.1",
+    "svg-arc-to-cubic-bezier": "^3.2.0",
+    "svg-parser": "^2.0.4",
+    "svg-pathdata": "^7.1.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.9",
-    "jest": "^24.1.0",
-    "ts-jest": "^24.0.0"
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5"
   },
   "jest": {
     "roots": [
@@ -55,5 +55,15 @@
       "json",
       "node"
     ]
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ]
+      }
+    }
   }
+
 }

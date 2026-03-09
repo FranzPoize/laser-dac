@@ -1,9 +1,9 @@
 import { Server as WebSocketServer } from 'ws';
 import { Point, Device, Scene } from '@laser-dac/core';
 import { throttle } from './helpers';
-import * as express from 'express';
-import * as path from 'path';
-import * as http from 'http';
+import express from 'express';
+import * as path from 'node:path';
+import * as http from 'node:http';
 
 // When there is no real device, we fake an interval.
 // We've measured how fast the real device streams, which was 4ms.
@@ -17,7 +17,8 @@ const PORT = 8080;
 export class Simulator extends Device {
   server?: http.Server;
   wss?: WebSocketServer;
-  interval?: NodeJS.Timer;
+  interval?: NodeJS.Timeout;
+  port?: number = PORT;
 
   start(): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -27,11 +28,23 @@ export class Simulator extends Device {
       this.wss = new WebSocketServer({ server: this.server });
 
       this.server.on('request', app);
-      this.server.listen(PORT, function () {
-        console.log(`Started simulator on http://localhost:${PORT}`);
+      this.server.listen(this.port, () => {
+        console.log(`Started simulator on http://localhost:${this.port}`);
         resolve(true);
       });
     });
+  }
+
+  getMaxFrameSize() {
+    return 0;
+  }
+
+  getMaxSampleRate() {
+    return 0;
+  }
+
+  getMinSampleRate() {
+    return 0;
   }
 
   stop() {

@@ -115,7 +115,7 @@ requestAnimationFrame(render);
 
 const host = window.document.location.host.replace(/:.*/, '');
 const ws = new WebsocketClient();
-ws.open('ws://' + host + ':8080');
+ws.open('ws://' + host + ':3002');
 ws.onmessage = function (event) {
   const payload = JSON.parse(event.data);
   if (payload.type === 'POINTS') {
@@ -130,5 +130,74 @@ ws.onmessage = function (event) {
   if (payload.type === 'POINTS_INFO') {
     options.numberOfPoints = String(payload.data.numpoints);
     options.totalPoints = String(payload.data.totalPoints);
+  }
+};
+
+
+const wsInput = new WebsocketClient();
+wsInput.open('ws://' + host + ':8321');
+
+// add event listeners for key handling
+window.addEventListener("keyup", (e) => handleOnKeyup(e, wsInput))
+window.addEventListener("keydown", (e) => handleOnKeydown(e, wsInput))
+
+
+function handleOnKeydown(e, ws) {
+  console.log(e.key);
+  e.preventDefault();
+  switch (e.key) {
+    /* Modifiers */
+    case "Control"   : ws.send("mod-control^1"); break;
+    case "Shift"     : ws.send("mod-shift^1"); break;
+    case "Meta"      : ws.send("mod-meta^1"); break;
+    case "Alt"       : ws.send("mod-alt^1"); break;
+    /* Plain */
+    case "9"         : ws.send("switch-to-editor"); break;
+    case "0"         : ws.send("switch-to-projection"); break;
+    case "1"         : ws.send("add-maskingbox"); break;
+    case "2"         : ws.send("add-platform-static"); break;
+    case "3"         : ws.send("add-platform-moving"); break;
+    case "4"         : ws.send("add-laserspawner"); break;
+    case "5"         : ws.send("add-neonboss"); break;
+    case "6"         : ws.send("add-animationbox"); break;
+    case "Escape"    : ws.send("escape"); break;
+    case "Enter"     : ws.send("confirm"); break;
+    case " "         : ws.send("edit-next"); ws.send("jump^1"); break;
+    case "]"         : ws.send("next"); break;
+    case "["         : ws.send("previous"); break;
+    case "Backspace" : ws.send("delete"); break;
+    case "s"         : ws.send("export"); break;
+    case "r"         : ws.send("reset"); break;
+    case "ArrowUp"   : ws.send("move-N^1"); break;
+    case "ArrowDown" : ws.send("move-S^1"); break;
+    case "ArrowLeft" : ws.send("move-W^1"); break;
+    case "ArrowRight": ws.send("move-E^1"); break;
+    case "m"         : ws.send("move-W^1"); break; /* alternative to 'ArrowLeft' to avoid ghosting on joystick */
+    case "i"         : ws.send("scale-down-h^1"); break;
+    case "k"         : ws.send("scale-up-h^1"); break;
+    case "j"         : ws.send("scale-down-w^1"); break;
+    case "l"         : ws.send("scale-up-w^1"); break;
+  }
+};
+
+function handleOnKeyup(e, ws) {
+  e.preventDefault();
+  switch (e.key) {
+    /* Modifiers */
+    case "Control"   : ws.send("mod-control^0"); break;
+    case "Shift"     : ws.send("mod-shift^0"); break;
+    case "Meta"      : ws.send("mod-meta^0"); break;
+    case "Alt"       : ws.send("mod-alt^0"); break;
+    /* Plain */
+    case " "         : ws.send("jump^0"); break;
+    case "ArrowUp"   : ws.send("move-N^0"); break;
+    case "ArrowDown" : ws.send("move-S^0"); break;
+    case "ArrowLeft" : ws.send("move-W^0"); break;
+    case "ArrowRight": ws.send("move-E^0"); break;
+    case "m"         : ws.send("move-W^0"); break; /* alternative to 'ArrowLeft' to avoid ghosting on joystick */
+    case "i"         : ws.send("scale-down-h^0"); break;
+    case "k"         : ws.send("scale-up-h^0"); break;
+    case "j"         : ws.send("scale-down-w^0"); break;
+    case "l"         : ws.send("scale-up-w^0"); break;
   }
 };

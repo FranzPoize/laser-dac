@@ -4,7 +4,7 @@ import { Line } from './Line';
 import { Wait } from './Wait';
 import { CubicCurve } from './CubicCurve';
 import { SVGPathData } from 'svg-pathdata';
-import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
+import { CommandM, SVGCommand } from 'svg-pathdata';
 import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
 import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
