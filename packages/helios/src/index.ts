@@ -88,7 +88,7 @@ export class Helios extends Device {
                     m_draw_list: heliosLib.IPoint[];
                 },
             ];
-            m_intensity: number;
+            m_context: { m_intensity: number };
         },
         pointsRate: number,
         fps: number,
@@ -97,10 +97,10 @@ export class Helios extends Device {
             return {
                 x: relativeToPosition(p.x),
                 y: relativeToPosition(p.y),
-                r: relativeToColor(p.r),
-                g: relativeToColor(p.g),
-                b: relativeToColor(p.b),
-                i: scene.m_intensity,
+                r: relativeToColor(p.r) * scene.m_context.m_intensity,
+                g: relativeToColor(p.g) * scene.m_context.m_intensity,
+                b: relativeToColor(p.b) * scene.m_context.m_intensity,
+                i: scene.m_context.m_intensity,
             };
         };
         for (
