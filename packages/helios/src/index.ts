@@ -111,9 +111,18 @@ export class Helios extends Device {
                     .map((p) => ({
                         x: relativeToPosition(p.x),
                         y: relativeToPosition(p.y),
-                        r: relativeToColor(p.r) * proj_scene.m_intensity,
-                        g: relativeToColor(p.g) * proj_scene.m_intensity,
-                        b: relativeToColor(p.b) * proj_scene.m_intensity,
+                        r:
+                            relativeToColor(p.r) *
+                            proj_scene.m_intensity *
+                            scene.m_context.m_intensity,
+                        g:
+                            relativeToColor(p.g) *
+                            proj_scene.m_intensity *
+                            scene.m_context.m_intensity,
+                        b:
+                            relativeToColor(p.b) *
+                            proj_scene.m_intensity *
+                            scene.m_context.m_intensity,
                         i: 0xff,
                     }))
                     .slice(0, MAX_POINTS);
