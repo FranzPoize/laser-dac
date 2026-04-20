@@ -86,6 +86,7 @@ export class Helios extends Device {
             m_proj_scene_list: [
                 {
                     m_draw_list: heliosLib.IPoint[];
+                    m_intensity: number;
                 },
             ];
             m_context: { m_intensity: number };
@@ -93,16 +94,6 @@ export class Helios extends Device {
         pointsRate: number,
         fps: number,
     ) {
-        const convertPoint = (p: heliosLib.IPoint) => {
-            return {
-                x: relativeToPosition(p.x),
-                y: relativeToPosition(p.y),
-                r: relativeToColor(p.r) * scene.m_context.m_intensity,
-                g: relativeToColor(p.g) * scene.m_context.m_intensity,
-                b: relativeToColor(p.b) * scene.m_context.m_intensity,
-                i: scene.m_context.m_intensity,
-            };
-        };
         for (
             let device = 0;
             device < scene.m_proj_scene_list.length;
@@ -117,7 +108,14 @@ export class Helios extends Device {
                     return;
                 }
                 const points = proj_scene.m_draw_list
-                    .map(convertPoint)
+                    .map((p) => ({
+                        x: relativeToPosition(p.x),
+                        y: relativeToPosition(p.y),
+                        r: relativeToColor(p.r) * proj_scene.m_intensity,
+                        g: relativeToColor(p.g) * proj_scene.m_intensity,
+                        b: relativeToColor(p.b) * proj_scene.m_intensity,
+                        i: 0xff,
+                    }))
                     .slice(0, MAX_POINTS);
                 heliosLib.writeFrame(
                     device,
