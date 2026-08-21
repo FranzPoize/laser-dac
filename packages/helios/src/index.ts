@@ -22,6 +22,10 @@ export class Helios extends Device {
         return this.count > 0;
     }
 
+    rescanDevices() {
+        this.count = heliosLib.rescanDevices();
+    }
+
     getMaxFrameSize(deviceIndex: number = 0) {
         return heliosLib.GetMaxFrameSize(deviceIndex);
     }
@@ -82,8 +86,8 @@ export class Helios extends Device {
     }
 
     stream_game(
-        scene: {
-            m_proj_scene_list: [
+        game: {
+            get_scene_data: () => [
                 {
                     m_draw_list: heliosLib.IPoint[];
                     m_intensity: number;
@@ -94,13 +98,10 @@ export class Helios extends Device {
         pointsRate: number,
         fps: number,
     ) {
-        for (
-            let device = 0;
-            device < scene.m_proj_scene_list.length;
-            device++
-        ) {
+        const scene_list = game.get_scene_data();
+        for (let device = 0; device < scene_list.length; device++) {
             this.interval[device] = setInterval(() => {
-                const proj_scene = scene.m_proj_scene_list[device];
+                const proj_scene = scene_list[device];
                 if (!proj_scene.m_draw_list.length) {
                     return;
                 }
@@ -114,15 +115,18 @@ export class Helios extends Device {
                         r:
                             relativeToColor(p.r) *
                             proj_scene.m_intensity *
-                            scene.m_context.m_intensity,
+                            game.m_context.m_intensity *
+                            proj_scene.m_intensity,
                         g:
                             relativeToColor(p.g) *
                             proj_scene.m_intensity *
-                            scene.m_context.m_intensity,
+                            game.m_context.m_intensity *
+                            proj_scene.m_intensity,
                         b:
                             relativeToColor(p.b) *
                             proj_scene.m_intensity *
-                            scene.m_context.m_intensity,
+                            game.m_context.m_intensity *
+                            proj_scene.m_intensity,
                         i: 0xff,
                     }))
                     .slice(0, MAX_POINTS);
