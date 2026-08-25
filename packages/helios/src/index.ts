@@ -98,9 +98,12 @@ export class Helios extends Device {
         pointsRate: number,
         fps: number,
     ) {
-        const scene_list = game.get_scene_data();
-        for (let device = 0; device < scene_list.length; device++) {
+        for (let device = 0; device < this.count; device++) {
             this.interval[device] = setInterval(() => {
+                const scene_list = game.get_scene_data();
+                if (device > scene_list.length - 1) {
+                    return;
+                }
                 const proj_scene = scene_list[device];
                 if (!proj_scene.m_draw_list.length) {
                     return;
