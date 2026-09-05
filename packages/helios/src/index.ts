@@ -39,15 +39,13 @@ export class Helios extends Device {
     }
 
     stop() {
-        for (let i = 0; i < this.count; i++) {
-            heliosLib.setShutter(i, false);
-        }
         heliosLib.closeDevices();
         this.interval.forEach((interval) => {
             if (interval) {
                 clearInterval(interval);
             }
         });
+        this.interval = [];
     }
 
     private convertPoint(p: heliosLib.IPoint) {
@@ -91,7 +89,8 @@ export class Helios extends Device {
                 {
                     m_draw_list: heliosLib.IPoint[];
                     m_intensity: number;
-                    point_rate: number;
+                    m_point_rate: number;
+                    m_helios_index: number;
                 },
             ];
             m_context: { m_intensity: number };
@@ -99,20 +98,21 @@ export class Helios extends Device {
         fps: number,
     ) {
         for (let device = 0; device < this.count; device++) {
-            this.interval[device] = setInterval(() => {
-                const scene_list = game.get_scene_data();
-                if (device > scene_list.length - 1) {
-                    return;
-                }
-                const proj_scene = scene_list[device];
-                if (!proj_scene.m_draw_list.length) {
-                    return;
-                }
-                if (heliosLib.getStatus(device) !== 1) {
-                    return;
-                }
-                const points = proj_scene.m_draw_list
-                    .map((p) => ({
+            this.interval.push(
+                setInterval(() => {
+                    console.log(this.interval.length);
+                    const scene_list = game.get_scene_data();
+                    if (device > scene_list.length - 1) {
+                        return;
+                    }
+                    const proj_scene = scene_list[device];
+                    if (!proj_scene.m_draw_list.length) {
+                        return;
+                    }
+                    if (heliosLib.getStatus(device) !== 1) {
+                        return;
+                    }
+                    const points = proj_scene.m_draw_list.map((p) => ({
                         x: relativeToPosition(p.x),
                         y: relativeToPosition(p.y),
                         r:
@@ -131,16 +131,25 @@ export class Helios extends Device {
                             game.m_context.m_intensity *
                             proj_scene.m_intensity,
                         i: 0xff,
-                    }))
-                    .slice(0, MAX_POINTS);
-                heliosLib.writeFrame(
-                    device,
-                    proj_scene.point_rate,
-                    0,
-                    points,
-                    points.length,
-                );
-            }, 1000 / fps);
+                    }));
+                    heliosLib.writeFrame(
+                        proj_scene.m_helios_index,
+                        proj_scene.m_point_rate,
+                        0,
+                        points,
+                        points.length,
+                    );
+                }, 1000 / fps),
+            );
         }
+    }
+
+    write_frame(
+        index: number,
+        point_rate: number,
+        flag: number,
+        points: heliosLib.IPoint[],
+    ) {
+        heliosLib.writeFrame(index, point_rate, flag, points, points.length);
     }
 }

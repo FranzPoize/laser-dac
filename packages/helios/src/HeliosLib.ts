@@ -96,7 +96,7 @@ export function setShutter(dacNum: number, shutterValue: boolean): number {
 export function writeFrame(
     dacNum: number,
     pps: number,
-    flags: 0 | 1,
+    flags: number,
     points: any[],
     numOfPoints: number,
 ): number {
