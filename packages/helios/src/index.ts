@@ -91,7 +91,7 @@ export class Helios extends Device {
                 {
                     m_draw_list: heliosLib.IPoint[];
                     m_intensity: number;
-                    pointsRate: number;
+                    point_rate: number;
                 },
             ];
             m_context: { m_intensity: number };
@@ -135,7 +135,7 @@ export class Helios extends Device {
                     .slice(0, MAX_POINTS);
                 heliosLib.writeFrame(
                     device,
-                    proj_scene.pointsRate,
+                    proj_scene.point_rate,
                     0,
                     points,
                     points.length,
